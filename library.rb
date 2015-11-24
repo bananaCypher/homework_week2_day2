@@ -4,6 +4,7 @@ class Library
     @name = name
     @books = {}
     @people = {}
+    @borrowed = {}
   end
 
   def add_book(book)
@@ -33,12 +34,14 @@ class Library
   def lend(person_name, book_title)
     person = @people[person_name]
     book = @books.delete(book_title)
+    @borrowed[book.title] = person
     person.borrow(book)
   end
 
   def return(person_name, book_title)
     person = @people[person_name]
     book = person.return(book_title)
+    @borrowed.delete(book.title)
     add_book(book)
   end
 
@@ -49,5 +52,10 @@ class Library
     else
       books
     end
+  end  
+  def who_has(book_title)
+      person = @borrowed[book_title]
+      return person.name if person != nil
+      "nobody"
   end
 end
